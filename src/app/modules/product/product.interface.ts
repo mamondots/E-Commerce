@@ -6,6 +6,6 @@ export type TProduct = {
   stock: number;
   quantity: number;
   category: string;
-  availability: 'Instock' | 'Outofstock';
+  availability: 'stock' | 'OutStock';
   image: string;
 };
