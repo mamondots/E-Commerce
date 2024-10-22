@@ -4,8 +4,10 @@ import { productService } from './product.service';
 
 const createProduct = async (req: Request, res: Response) => {
   try {
-    const product = req.body;
-    const result = await productService.createProductInfoDB(product);
+    const result = await productService.createProductInfoDB({
+      ...JSON.parse(req.body.data),
+      image: req.file?.path,
+    });
 
     res.status(200).json({
       success: true,

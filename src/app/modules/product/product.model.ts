@@ -18,7 +18,7 @@ const productSchema = new Schema<TProduct>(
       enum: ['stock', 'OutStock'],
       required: true,
     },
-    image: { type: String, required: true },
+    image: { type: String, default: null },
   },
   {
     timestamps: true,
