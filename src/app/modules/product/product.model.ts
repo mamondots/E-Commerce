@@ -10,9 +10,6 @@ const productSchema = new Schema<TProduct>(
     stock: {
       type: Number,
     },
-    quantity: {
-      type: Number,
-    },
     availability: {
       type: String,
       enum: ['stock', 'OutStock'],
