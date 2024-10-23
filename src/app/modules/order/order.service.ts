@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { initiatePayment } from '../payment/payment.utils';
 import { Product } from '../product/product.model';
 import { TOrder } from './order.interface';
 import { Order } from './order.model';
@@ -11,14 +12,13 @@ const createOrder = async (orderData: any) => {
   const productDetails = await Promise.all(
     products.map(async (item: any) => {
       const product = await Product.findById(item.product);
-      console.log(product);
+
       if (product) {
         totalPrice += product.price * item.quantity;
         return {
           product: product._id,
           quantity: item.quantity,
         };
-        console.log(totalPrice);
       } else {
         throw new Error('Product not found');
       }
@@ -36,8 +36,17 @@ const createOrder = async (orderData: any) => {
   });
 
   await order.save();
-
-  return order;
+  const paymentData = {
+    transactionId,
+    totalPrice,
+    custormerName: user.name,
+    customerEmail: user.email,
+    customerPhone: user.phone,
+    customerAddress: user.address,
+  };
+  const paymentSection = await initiatePayment(paymentData);
+  // console.log(paymentSection);
+  return paymentSection;
 };
 
 const allOrderData = async () => {
