@@ -1,6 +1,7 @@
 import mongoose, { Schema } from 'mongoose';
-import { TUser } from './user.interface';
+import { IUser, TUser } from './user.interface';
 import bcrypt from 'bcrypt';
+import bcryptjs from 'bcryptjs';
 
 const UserSchema = new Schema<TUser>({
   name: { type: String, required: [true, 'Name is required'] },
@@ -27,4 +28,15 @@ UserSchema.post('save', function (doc, next) {
   next();
 });
 
-export const User = mongoose.model<TUser>('user', UserSchema);
+UserSchema.statics.isUserExistsByEmail = async function (email: string) {
+  return await User.findOne({ email }).select('+password');
+};
+
+UserSchema.statics.isPasswordMatched = async function (
+  plainTextPassword,
+  hashedPassword,
+) {
+  return await bcryptjs.compare(plainTextPassword, hashedPassword);
+};
+
+export const User = mongoose.model<TUser, IUser>('user', UserSchema);
